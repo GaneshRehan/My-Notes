@@ -16,6 +16,7 @@ csr=conn.cursor()
 #     email text
 # )''')
 # In above case first_name, last_name, email are column names and text is data type. We only have 5 datatypes in sqlite3 i.e., null, integer, real, text, blob.
+# Here, beside datatypes we can add constrains like UNIQUE or PRIMARY KEY clauses. UNIQUE allows only if that doesnot exist before. PRIMARY KEY makes that particular column as the primary key.
 
 # To insert data into out tables. we can insert 1 record at a time
 # csr.execute("INSERT INTO customers VALUES('Alex','Ambrose','')")
