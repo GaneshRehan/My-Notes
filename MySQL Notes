@@ -1,1 +1,177 @@
+-- MySQL is not a case-sensitive language. But for clarity and understanding purposes, we use all the keywords and clauses in upper-case.
 
+-- To get a data from a database to we need to select that databaase. IT is done by USE clause. Sometimes it can also be done by double clicking the
+USE sql_store;
+
+-- In MySQL, we use ; to seperate various statements.
+-- In a qurey, order of various clauses matters. It must be in a particular order only.
+
+-- To select the required columns in the table, we use SELECT and FROM clauses as follows, SELECT to indicate columns and FROM to indicate table.
+-- An astrisk will return all the columns.
+-- The following statement will return all the columns from the customers table.
+SELECT * FROM customers;
+
+-- WHERE clause is used to filter the result according to our need.
+SELECT * FROM customers WHERE customer_id = 1;
+
+-- ORDER BY clause is used to sort the results according to any column.
+SELECT * FROM customers WHERE customer_id = 1 ORDER BY first_name;
+
+
+-- SELECT clause
+-- To select the required columns in the table, we use SELECT and FROM clauses as follows, SELECT to indicate columns and FROM to indicate table.
+-- An astrisk will return all the columns.
+-- We can explictly specify which columns we want and it will return only those columns. 
+-- Note that the returned columns will be in the order as specified beside the SELECT clause
+-- Following will return first and last names while the next one will return last and first names.
+SELECT first_name, last_name FROM customers;
+SELECT last_name, first_name FROM customers;
+
+-- We can add mathematical formulae as well, might it be simple or complex ones. Note that if we do a arthmetic operation to a column that stores string, the value of the string will be considered as 0 irrespective of it's value. If it is a column of numerical values we will get the result of that mathematical operation on that value.
+-- The operations follow classic BODMAS rule. We can use parenthesis to change the order of operations.
+-- The name of the column will be set to the operation we perform. We can give it an alias using AS clause to change the column name. We can add quotes to keep spaces in the column name. The quotes can be single or double as '',"".
+-- Note that this doesn't affect the original values. It is only used to see the result of that operation which is required.
+SELECT last_name, first_name,points+10 FROM customers;
+-- The above statement will return 3 columns with 3rd column being the result of the performed operation on the original column.
+SELECT last_name, first_name+10,points FROM customers;
+-- The above statement will return 3 columns with the middle column i.e., first_name showing the value 10 for all records.
+SELECT last_name, first_name,points+10 AS 'discount factor' FROM customers;
+-- The above statement will return 3 columns with 3rd ccolumn name being discount factor and containing the records which are the result of the performed operation.
+
+-- To update a record we can use UPDATE clause or from result grid, we can double click on the required record and edit it and press enter. At the bottom right corner we will see Apply button. Click on it and click agree on the popup window to update the record.
+-- UPDATE is used as follows.
+-- UPDATE <table_name> SET <column_name> = <new_value> WHERE <condition>
+-- An example is as follows.
+UPDATE customers SET state='VA' WHERE customer_id=1;
+
+-- To get unique list of records or unique records in any column, we use DISTINCT keyword.
+SELECT DISTINCT state FROM customers;
+
+-- > is greater than operator, >= greater than or equal to operator, < less than operator, <= less than or equal to operator, = equal to, != or <> not equal to operator.
+
+
+-- WHERE clause
+-- It is used to filter data based on given condition.
+SELECT * FROM Customers WHERE points>3000;
+-- If the data is textual, we need to enclose the data in quotes. We can use upper or lower case characters.
+SELECT * FROM Customers WHERE state='VA';
+SELECT * FROM Customers WHERE state='va';
+-- Both the above quries are same.
+-- These operators can be used to check date as well.
+-- Date is enclosed in quotes by syntax. It must be noted that the date with which we want to compare should be given in the above specified format only.
+SELECT * FROM Customers WHERE birth_date>'YYYY-MM-DD';
+-- We can also use arthmetic operations inside WHERE clause. It is not restricted to SELECT clause only.
+SELECT *,unit_price*quantity AS 'total price' FROM order_items WHERE unit_price*quantity>30;
+
+
+-- AND, OR, NOT operators
+-- These operators are used to check multiple conditions at once.
+-- AND implies that bith the conditions should be true.
+-- OR implies that atleast one of the two conditions should be true.
+-- NOT implies negation.
+-- Order of these operators is AND, OR. We can use parenthesis to change the order.
+SELECT * FROM customers WHERE birth_date>'1990-01-01' AND points>1000;
+SELECT * FROM customers WHERE birth_date>'1990-01-01' OR points>1000;
+-- The following two quries are the same. It is so because of the order of the operators.
+SELECT * FROM customers WHERE birth_date>'1990-01-01' OR points>1000 AND state='VA';
+SELECT * FROM customers WHERE birth_date>'1990-01-01' OR (points>1000 AND state='VA');
+-- The following two quries are the same.
+SELECT * FROM customers WHERE NOT (birth_date>'1990-01-01' Or points>1000);
+SELECT * FROM customers WHERE birth_date<='1990-01-01' AND points<=1000;
+
+
+-- IN operator
+-- Note that in sql we cannot combine boolean with string. If we write it as
+SELECT * FROM customers WHERE state='VA' OR 'GA' OR 'FL';
+-- one side of it is string while the other side in boolean. So it will show an error.
+-- Both the below quries are the same.
+SELECT * FROM customers WHERE state='VA' OR state='GA' OR state='FL';
+SELECT * FROM customers WHERE state IN ('VA','FL','GA');
+-- Note that hre order doesn't matter.
+-- We can also use the NOT operator with IN operator as follows. Both the below quries are same.
+SELECT * FROM customers WHERE state!='VA' AND state!='GA' AND state!='FL';
+SELECT * FROM customers WHERE state NOT IN ('VA','FL','GA');
+-- It can also be applied to numerical values. Both the below quries are same.
+SELECT * FROM products WHERE quantity_in_stock=38 OR quantity_in_stock=49 OR quantity_in_stock=72;
+SELECT * FROM products WHERE quantity_in_stock IN (38,49,72)
+
+
+-- BETWEEN operator
+-- It is used to specify beginning and ending limits when w are comparing with a range of values. Both the below quries are same.
+SELECT * FROM customers WHERE points>=1000 AND points<=3000;
+SELECT * FROM customers WHERE points BETWEEN 1000 AND 3000;
+-- Note that if we apply it to strings, since the string will be taken as 0 we won't get any result. The following qurey won't produce or return any records because of this reason.
+SELECT * FROM customers WHERE state BETWEEN 'VA' AND 'CO';
+
+
+-- LIKE operator
+-- It is used to check if the string has a specific sequence.
+-- The below qurey is used to check whose last names start with brus. It doesn't matter if it is a upper case or lower case brus.
+SELECT * FROM  customers WHERE last_name LIKE 'brus%';
+-- The % is used to specify that it can have any sequence of characters after that b.
+-- The following qurey will return all the records whose last name contain the letter b. It can have any number of characters before and after the b. It doesnt matter if it is at beginning or end.
+SELECT * FROM customers WHERE last_name LIKE '%b%';
+-- The below qurey is used to check whose last names end with y. It doesn't matter if it is a upper case or lower case y.
+SELECT * FROM  customers WHERE last_name LIKE '%y';
+-- An underscore(_) matches a single character before or after a sepcific sequence.
+-- The following qurey returns all records whose last names have b as their second character.
+SELECT * FROM customers WHERE last_name LIKE '_b%';
+-- The following qurey returns all records whose last name starts with b and ends with y and has exactly 5 characters between them.
+SELECT * FROM customers WHERE last_name LIKE 'b_____y';
+-- So the % means any no. of characters and _ means exactly one character.
+-- It is also used in the same manner for numerical values. The value must be treated as a string.
+-- The following qurey returns all records whose phone numbers end with 9.
+SELECT * FROM customers WHERE phone LIKE '%9';
+-- NOT operator is used to negate it.
+-- THhe following qurey returns all records whose phone number doesn't end with 9.
+SELECT * FROM customers WHERE phone NOT LIKE '%9';
+
+
+-- REGEXP operator
+-- They allow us to search for more complex patterns in strings.
+-- Both the below quries are same and returns the records whose last name contains field
+SELECT * FROM customers WHERE last_name LIKE '%field%';
+SELECT * FROM customers WHERE last_name REGEXP 'field';
+-- ^ indicates the beginning of string. It is used as '^sequence'
+-- $ indicates the end of string. It sis used as 'sequence$'
+-- | indicates that any of the sequence should be there. It is used as 'seq1|seq2|seqn'. So it is used to look for multiple search patterns. Example is as follows.
+SELECT * FROM customers WHERE last_name REGEXP 'field|mac|rose';
+-- | ^ $ can be used together as follows.
+SELECT * FROM customers WHERE last_name REGEXP '^field|mac$|rose';
+-- [] can be used to search a specific sequence as follows.
+SELECT * FROM customers WHERE last_name REGEXP '[gim]e';       -- This qurey returns all the records whose last name has ge or ie or me in their last name.
+-- Note that the [] can be before or after the sequence as 'seq[]' or '[]seq'
+-- We can supply a range of characters by using - operator as follows. So we need not declare them explictly.
+SELECT * FROM customers WHERE last_name REGEXP '[a-d]e';       -- This qurey returns the records whose last name contains ae or be or ce or de
+
+
+-- NULL operator
+-- It indicates that it has no value. It can be checked using IS NULL operator.
+SELECT * FROM customers WHERE phone IS NULL;     -- It returns all records whose phone number is null or donot have a phone number.
+SELECT * FROM customers WHERE phone IS NOT NULL;     -- It returns all records whose phone number is not null or has a phone number.
+
+
+-- ORDER BY clause
+-- It is used to sort results based on any column. By default, the data will be ordered by the column that is PRIMARY KEY
+SELECT * FROM customers ORDER BY first_name;
+-- Order can be reversed by DESC keyword.
+ SELECT * FROM customers ORDER BY first_name DESC;
+ -- We can sort based on multiple columns. Order of passed columns matters.
+ SELECT * FROM customers ORDER BY state DESC, first_name;      -- This qurey returns the records sorted first by their state in descending order and then by first name in ascending order if state is same.
+ -- Note that in MySQL we can sort data by any column weather it is there in SELECT clause or not.
+ SELECT first_name,last_name FROM customers ORDER BY first_name DESC;        -- This is also a valid qurey in MySQL but not in all DBMS.
+-- We can also sort using an alias.
+SELECT first_name,last_name,10 AS points FROM customers ORDER BY points,first_name DESC;   -- This is also a valid qurey in MySQL but not in all DBMS.
+SELECT first_name,last_name FROM customers ORDER BY 1,2;       -- Here 1 indicate sfirst_name column and 2 indicates last_name column.
+
+
+-- LIMIT clause
+-- It is used to limit the number of records returned.
+-- Note that the LIMIT clause always comes at the end.
+SELECT * FROM customers LIMIT 5;
+-- Here we can optionally supply an offset. It is very useful to paginate the data.
+SELECT * FROM customers LIMIT 6,3;        -- This will skip the 1st 3 records and will return the next 3 records.
+
+
+-- Inner Joins
+-- more will be uploaded soon... sorry for delay
