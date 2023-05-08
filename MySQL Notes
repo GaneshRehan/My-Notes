@@ -174,4 +174,4 @@ SELECT * FROM customers LIMIT 6,3;        -- This will skip the 1st 3 records an
 
 
 -- Inner Joins
--- more will be uploaded soon... sorry for delay
+-- more will be uploaded soon... sorry for delay...this is only one third of the complete notes...
